@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tamagotchi</title>
+  <style>
+    #status {
+      margin-bottom: 10px;
+    }
+
+    #buttons {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tamagotchi</h1>
+  <div id="status">
+    <strong>Status:</strong>
+    <p id="fome">Fome: 0</p>
+    <p id="felicidade">Felicidade: 100</p>
+  </div>
+  <div id="buttons">
+    <button onclick="alimentar()">Alimentar</button>
+    <button onclick="acariciar()">Acariciar</button>
+    <button onclick="passear()">Passear</button>
+    <button onclick="trocarEmoji()">Trocar de Emoji</button>
+  </div>
+
+  <script>
+    // Classe do Tamagotchi
+    class Tamagotchi {
+      constructor(nome) {
+        this.nome = nome;
+        this.felicidade = 100;
+        this.fome = 0;
+        this.estaVivo = true;
+      }
+
+      alimentar() {
+        if (!this.estaVivo) {
+          console.log(`${this.nome} não está mais vivo.`);
+          return;
+        }
+
+        this.fome -= 10;
+        this.fome = Math.max(0, this.fome);
+
+        console.log(`${this.nome} foi alimentado. Fome: ${this.fome}`);
+        this.verificarStatus();
+      }
+
+      acariciar() {
+        if (!this.estaVivo) {
+          console.log(`${this.nome} não está mais vivo.`);
+          return;
+        }
+
+        this.felicidade += 10;
+        this.felicidade = Math.min(100, this.felicidade);
+
+        console.log(`${this.nome} recebeu carinho. Felicidade: ${this.felicidade}`);
+        this.verificarStatus();
+      }
+
+      passear() {
+        if (!this.estaVivo) {
+          console.log(`${this.nome} não está mais vivo.`);
+          return;
+        }
+
+        this.felicidade += 10;
+        this.felicidade = Math.min(100, this.felicidade);
+
+        console.log(`${this.nome} foi passear. Felicidade: ${this.felicidade}`);
+        this.verificarStatus();
+      }
+
+      trocarEmoji() {
+        if (!this.estaVivo) {
+          console.log(`${this.nome} não está mais vivo.`);
+          return;
+        }
+
+        const novoEmoji = prompt('Digite um novo emoji para o seu Tamagotchi:');
+        this.emoji = novoEmoji;
+        console.log(`${this.nome} trocou de emoji para ${novoEmoji}`);
+      }
+
+      verificarStatus() {
+        if (this.felicidade <= 0 || this.fome >= 100) {
+          this.estaVivo = false;
+          console.log(`${this.nome} morreu. Fim de jogo!`);
+          disableButtons();
+        }
+      }
+
+      atualizarStatus() {
+        if (this.estaVivo) {
+          this.fome += 10;
+          this.fome = Math.min(100, this.fome);
+
+          this.felicidade -= 10;
+          this.felicidade = Math.max(0, this.felicidade);
+
+          document.getElementById('fome').textContent = `Fome: ${this.fome}`;
+          document.getElementById('felicidade').textContent = `Felicidade: ${this.felicidade}`;
+
+          console.log(`\nStatus atualizado de ${this.nome}`);
+          console.log(`Fome: ${this.fome}`);
+          console.log(`Felicidade: ${this.felicidade}`);
+          console.log('--------------------------');
+          this.verificarStatus();
+        }
+      }
+    }
+
+    // Criação do objeto Tamagotchi
+    const nome = prompt('Digite um nome para o seu Tamagotchi:');
+    const tamagotchi = new Tamagotchi(nome);
+
+    // Funções dos botões
+    function alimentar() {
+      tamagotchi.alimentar();
+    }
+
+    function acariciar() {
+      tamagotchi.acariciar();
+    }
+
+    function passear() {
+      tamagotchi.passear();
+    }
+
+    function trocarEmoji() {
+      tamagotchi.trocarEmoji();
+    }
+
+    // Desabilitar os botões quando o Tamagotchi morrer
+    function disableButtons() {
+      const buttons = document.getElementsByTagName('button');
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].disabled = true;
+      }
+    }
+
+    // Atualizar o status a cada 10 segundos
+    setInterval(() => {
+      tamagotchi.atualizarStatus();
+    }, 10000);
+  </script>
+</body>
+</html>
